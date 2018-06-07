@@ -1,0 +1,103 @@
+\ProvidesPackage{style}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{array}           % for better arrays (eg matrices) in maths
+\usepackage{paralist}		% very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} 		% adds environment for commenting out blocks of text & for better verbatim
+\usepackage{graphicx}		% Inclusion d'images
+\graphicspath{{images/}}		% le chemin ou aller chercher les graphics
+\usepackage{listings}		% package for code listing
+\usepackage{color}			% package to use color
+\usepackage{hyperref}        % pour les liens cliquables
+\usepackage{pifont}			% http://ctan.org/pkg/pifont 
+\usepackage[titles]{tocloft} % Format table des matières 
+\usepackage{titlesec}        % Pour de jolis titres de chapitre
+
+% Couleurs
+\definecolor{darkGreen}{RGB}{0,0.6,0}
+\definecolor{gray}{RGB}{0.5,0.5,0.5}
+\definecolor{mauve}{RGB}{0.58,0,0.82}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+
+% Setup pour les liens
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={Projet IOT 2018},    % title
+    pdfauthor={Classe IOT1-A},     % author
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=black,        % color of internal links (change box color with linkbordercolor)
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=blue,          % color of external links
+}
+
+% Headers and footers
+\usepackage{fancyhdr}                   
+\pagestyle{fancy}                       
+\renewcommand{\headrulewidth}{1pt}      
+\renewcommand{\footrulewidth}{1pt}
+\lhead{\includegraphics[width=50px]{logoheig2}}\chead{}\rhead{Projet IOT}
+\lfoot{Classe IOT 2018}\cfoot{}\rfoot{\thepage}
+
+% Options
+\setlength\parindent{0pt} 
+\setcounter{tocdepth}{2}
+
+% Format des titres
+\titleformat{\chapter}[block]  
+{\normalfont\LARGE\bfseries}{\chaptertitlename\ \thechapter~:}{20pt}{\LARGE}  
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+% Format des pages
+\let\ps@plain\ps@fancy
+
+% Macro pour ajouter une page vide
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+% Format de la page des matières
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+
+% Nouvelles commandes
+\newcommand{\cmark}{\textcolor{pgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{pred}{\ding{55}}}
+
+% Code
+\lstdefinestyle{Java}
+{
+  language=Java,
+  inputencoding=utf8,
+  frame=single,
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle=\fontsize{9}{11}\ttfamily,
+  numbers=left,
+  numbersep=5px,
+  numberstyle=\tiny\color{pgrey},
+  stepnumber=1,
+  tabsize=2,
+}
