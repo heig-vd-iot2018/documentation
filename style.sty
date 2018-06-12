@@ -56,12 +56,13 @@
 
 % Options
 \setlength\parindent{0pt} 
-\setcounter{tocdepth}{2}
 
 % Format des titres
 \titleformat{\chapter}[block]  
 {\normalfont\LARGE\bfseries}{\chaptertitlename\ \thechapter~:}{20pt}{\LARGE}  
 \titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+\setcounter{secnumdepth}{2}
 
 % Format des pages
 \let\ps@plain\ps@fancy
@@ -75,6 +76,7 @@
 
 % Format de la page des matières
 \renewcommand{\cftchapdotsep}{\cftdotsep}
+\setcounter{tocdepth}{2}
 
 % Nouvelles commandes
 \newcommand{\cmark}{\textcolor{pgreen}{\ding{51}}}
