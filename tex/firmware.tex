@@ -1,0 +1,219 @@
+\chapter{Partie firmware}
+\section{Technologies utilisées}
+
+\subsection{Capteur}
+
+\url{https://www.espruino.com/BME680}
+\vspace{2mm}
+
+La BME680 est un capteur d'environnement fabriqué par Bosch. Elle permet de mesurer la température, la pression, l'humidité et la résistance au gaz. Elle s'exécute à partir d'une tension de 3.3V et communique avec la sortie du microcontrôleur via les bus SPI ou I2C. Dans le cadre de ce projet, nous utilisons le protocole I2C.
+
+\vspace{2mm}
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{environmentclick}
+\caption{Détails du capteur BME680}
+\end{figure}
+
+\subsection{LoRa}
+
+\url{https://www.espruino.com/RN2483 http://ww1.microchip.com/downloads/en/DeviceDoc/40001784B.pdf}
+
+\subsection{Connectique}
+
+\url{https://www.mikroe.com/arduino-uno-click-shield}
+\vspace{2mm}
+
+Arduino Uno est une extension pour Arduino Uno. Il contient deux micros bus permettant de connecter à arduino plus de 75 click board différents. Il permet d'ajouter des fonctionnalités comme GSM, Wifi, Zigbee, Bluetooth...
+
+\vspace{2mm}
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{uno_click_shield}
+\caption{Arduino uno click shield}
+\end{figure}
+
+\subsection{Carte}
+
+\url{http://www.st.com/en/evaluation-tools/nucleo-f401re.html}
+\vspace{2mm}
+
+La carte STM32 est une carte développée par Nucleo STMicroelectronics. Cette carte dispose
+
+\begin{itemize}
+\item[•] De deux types de ressources d'extension :
+\begin{itemize}
+\item[$\circ$] Une connectivité Arduino Uno révision 3
+\item[$\circ$] Un ST morpho pour les pins d'entête permettant un access à toutes les I/O de la STM32.
+\end{itemize}
+\item[•] Alimentation électrique de carte flexible
+\item[•] Trois LEDs
+\item[•] Deux boutons-poussoirs : \textsc{utilisateur} et \textsc{remise à zéro}
+\item[•] Capacité de ré-énumération USB : trois différentes interfaces prises en charge sur USB
+\begin{itemize}
+\item[$\circ$] Port Com virtuel
+\item[$\circ$] Stockage de masse
+\item[$\circ$] Port de débogage
+\end{itemize}
+\item[•] Et toute une série de périphériques et de composants.
+\end{itemize}
+\vspace{2mm}
+
+Le but est de connecter le module Lora (LoRa click) et le capteur BME680 (environment click) via la connectivité Arduino Uno (Arduino Uno click SHIELD) pour transférer les données du capteur vers l'application web. Pour ce faire, nous avons utilisé l'IDE Espruino et le langage javascript pour la configuration de la partie UART et la partie I2C.
+
+\subsection{IDE}
+
+\url{http://www.espruino.com/}
+\vspace{2mm}
+
+L'IDE web Espruino est un éditeur graphique open source conçu pour écrire et débugger du code sur des microcontrôleurs utilisant l'interpréteur javascript Espruino. Il peut également fonctionner en natif via Node.js et Electron, ou une version avec E / S limitée peut être utilisée comme site web.
+\vspace{2mm}
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{espruino}
+\caption{Espruino web IDE 1}
+\end{figure}
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{espruino}
+\caption{Espruino web IDE 2}
+\end{figure}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|p{4.5cm}|p{5.3cm}|p{6cm}|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Version}} & \multicolumn{1}{|c|}{\textbf{Communications}} & \multicolumn{1}{|c|}{\textbf{Avantages}} \\
+\hline
+Chrome Web App & USB, Serial, \href{http://www.espruino.com/Headphone}{Audio}, TCP/IP & Facile à installer depuis \href{https://chrome.google.com/webstore/detail/espruino-web-ide/bleoifhkdalbjfbobjackfdifdneehpo}{Chrome Web Store} \\
+\hline
+Node.js App / NW.js app & USB, Serial, Bluetooth Low Energy & Peut être le lancement de systèmes sans web browser \\
+\hline
+Web Version & \href{http://www.espruino.com/Headphone}{Audio}, Bluetooth Low Energy (via \href{https://webbluetoothcg.github.io/web-bluetooth/}{Web Bluetooth}) & Simple visite d'un \href{https://espruino.github.io/EspruinoWebIDE/}{URL} \\
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+
+\section{Spécificités}
+\subsection{Noeuds}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{No. du device}} & \multicolumn{1}{|c|}{\textbf{EUI}} & \multicolumn{1}{|c|}{\textbf{Click type}} \\
+\hline
+1 & 0004A30B001ADE26 & Environment \\
+2 & 0004A30B001A798B & Environment \\
+3 & 0004A30B001AD01A & Environment \\
+4 & 0004A30B001A602D & Environment \\
+5 & 0004A30B001A1E25 & Ambiant \\
+6 & 0004A30B001A5BE8 & Ambiant \\
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+
+\subsection{Envoi des données}
+\subsubsection{Header}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{15} & \textbf{14} & \textbf{13} & \textbf{12} & \textbf{11} & \textbf{10-2} & \textbf{1} & \textbf{0} \\
+\footnotesize{Temperature} & \footnotesize{Pressure} & \footnotesize{Humidity} & \footnotesize{Gas resistance} & \footnotesize{Light} & \footnotesize{Not used} & \footnotesize{Die temperature} & \footnotesize{Battery voltage} \\
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\medskip
+
+16 bits pour indiquer ou non la présence de la donnée. Pour les capteurs actuels, les headers sont les suivants:
+
+\begin{itemize}
+\item[•] Environment (BME680): \texttt{F003} (temperature, pression, humidité, gas res., temperature carte, batterie)
+\item[•] Ambient (OPT3001): \texttt{0803} (lumière, temperature carte, batterie)
+\end{itemize}
+    
+\subsubsection{Données}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|r|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Taille}} & \multicolumn{1}{|c|}{\textbf{Donnée}} & \multicolumn{1}{|c|}{\textbf{Conversion}} \\
+\hline
+16 bits & Temperature & $^\circ$C * 10 \\
+16 bits & Pressure & hPa * 10 \\
+16 bits & Humidity & \% * 100 \\
+16 bits & Gas resistance & Ohms / 10 \\
+16 bits & Light & Lux \\
+16 bits & Die temperature & $^\circ$C * 10 \\
+16 bits & Battery voltage & V * 10 \\
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\vspace{5mm}
+
+Le module LoRa demande d'envoyer une chaîne de caractères hexadécimale. Les valeurs doivent donc être convertie en temps que tel. Pour faciliter la lecture, chaque valeur est envoyée sur 4 digits (16 bits => 4 digits hex).
+
+Exemple de payload envoyée:
+
+\hspace{1cm}\textbullet~~ \texttt{F003003004500000001000240021}
+
+On y voit le header \texttt{F003} (qui signifie que toute les valeurs sauf la lumière sont dans le payload, comme pour le capteur BME), suivit des champs qui y sont indiqués dans l'ordre (les valeurs ici sont non représentatives des valeurs réelles).
+\vspace{5mm}
+
+\textbf{Remarques :}
+
+Le niveau de batterie est, pour l'instant une valeur factice car la carte Nucleo ne permet pas de la récupérer.
+
+\clearpage
+\subsection{Communication du changement de fréquence d'échantillonnage}
+
+Pour changer la fréquences d'échantillonnage d'un nœuds, il faut lui envoyer un payload en JSON, converti en hexadécimal.
+
+Le JSON se présente sous le format suivant : \texttt{\{"newInterval": value\}}
+
+La \texttt{value} est en millisecondes.
+
+La fréquence d'échantillonnage de base reste à définir
+
+\section{Déploiement}
+
+Avant de faire quoi que ce soit, il faut s'assurer que le FW qui sera loader contient bien les bonnes informations concernant les appKey et appEUI.
+
+Le déploiement des capteurs se fait de manière simple:
+
+\begin{enumerate}
+\item Changer la position du jumper central droite (pins gauches connectées) pour router l'alimentation sur les batterie et non plus sur USB.
+\item Insérer les piles.
+\item Load le programme de façon classique grâce à l'IDE.
+\item Débranché le câble USB.
+\end{enumerate}
+\vspace{5mm}
+
+\textbf{Remarques :}
+
+Le fait de lancer le FW à l'allumage ne fonctionne pas. Une erreur invalid\_param est reçue lors de l'envoi de l'appkey. Nous pensions que c'était du à un problème de capacités mal chargées donc nous avons mis un timeout de 2s avant de lancer l'initialisation des modules et des bus.
+
+Malheureusement, cela n'a pas suffi. Pour palier à ce problème, la marche à suivre en ci-dessus propose d'insérer les piles avant de load le FW. Cela fonctionne.
+
+\section{Tests effectués}
+
+Nous avons tester la connexion au LoRa server avec la gateway TTN. Cela fonctionne sans aucun problème et les données transitent des deux sens.
+Avec la gateway Raspberry PI, nous rencontrons des problèmes liés à un timeout lors de l'attente de la réponse du join (denied reçu). Nous pensons que cela vient de la gateway qui doit mal gérer la requête.
+
+\section{Conclusion}
+
+Dans l'ensemble, les points qui ont été demandés au groupe FW ont été atteint. Comme dit précédemment, des soucis surviennent lorsque le FW est loader depuis la mémoire directement après allumage et la communication avec la gateway bloque au join. Pour le premier problème, nous avons tenter de le résoudre mais cela n'a pas fonctionné et nous ne comprenons vraiment pas pourquoi.
+Pour le 2ème, des problèmes du côté de la gateway en sont probablement la cause, vu qu'en utilisant celle de TTN, nous ne rencontrons aucun problème.
+
+En conclusion, ce projet était une bonne approche à l'IoT et nous sommes heureux d'avoir pu travailler sur le FW particulièrement. Le fait d'avoir utilisé le Framework Espruino était une bonne découverte au vu de sa simplicité (debug et API offerte).
+
+\section{Sources}
+
+Payload: 
+
+\url{https://docs.google.com/spreadsheets/d/1PmNmLVsm3uHxBaLA38uTDL-t3WrtRHb4Pu9JmiWj3Kg/edit}
+\vspace{3mm}
+
+Datasheet: 
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{arduino_headers}
+\caption{Entêtes arduino}
+\end{figure}
